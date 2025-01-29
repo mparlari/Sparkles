@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flappy Unicorn</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: skyblue;
+        }
+        canvas {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="gameCanvas"></canvas>
+    <script>
+        const canvas = document.getElementById("gameCanvas");
+        const ctx = canvas.getContext("2d");
+        
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        let unicorn = {
+            x: 50,
+            y: canvas.height / 2,
+            width: 40,
+            height: 40,
+            velocityY: 0,
+            gravity: 0.5,
+        };
+
+        let obstacles = [];
+        let frame = 0;
+        let isGameOver = false;
+
+        function drawUnicorn() {
+            ctx.fillStyle = "pink";
+            ctx.fillRect(unicorn.x, unicorn.y, unicorn.width, unicorn.height);
+        }
+
+        function drawObstacles() {
+            ctx.fillStyle = "rgb(255, 192, 203)";
+            obstacles.forEach(obstacle => {
+                ctx.fillRect(obstacle.x, obstacle.y, obstacle.width, obstacle.height);
+            });
+        }
+
+        function updateObstacles() {
+            if (frame % 90 === 0) {
+                let height = Math.random() * (canvas.height / 2);
+                obstacles.push({
+                    x: canvas.width,
+                    y: 0,
+                    width: 50,
+                    height: height
+                });
+                obstacles.push({
+                    x: canvas.width,
+                    y: height + 150,
+                    width: 50,
+                    height: canvas.height - height - 150
+                });
+            }
+            obstacles.forEach(obstacle => obstacle.x -= 3);
+            obstacles = obstacles.filter(obstacle => obstacle.x + obstacle.width > 0);
+        }
+
+        function checkCollision() {
+            obstacles.forEach(obstacle => {
+                if (
+                    unicorn.x < obstacle.x + obstacle.width &&
+                    unicorn.x + unicorn.width > obstacle.x &&
+                    unicorn.y < obstacle.y + obstacle.height &&
+                    unicorn.y + unicorn.height > obstacle.y
+                ) {
+                    isGameOver = true;
+                }
+            });
+            if (unicorn.y + unicorn.height > canvas.height || unicorn.y < 0) {
+                isGameOver = true;
+            }
+        }
+
+        function gameLoop() {
+            if (isGameOver) {
+                ctx.fillStyle = "black";
+                ctx.font = "30px Arial";
+                ctx.fillText("Game Over! Refresh to Play Again", canvas.width / 4, canvas.height / 2);
+                return;
+            }
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            unicorn.velocityY += unicorn.gravity;
+            unicorn.y += unicorn.velocityY;
+            
+            drawUnicorn();
+            updateObstacles();
+            drawObstacles();
+            checkCollision();
+            frame++;
+            requestAnimationFrame(gameLoop);
+        }
+
+        document.addEventListener("keydown", () => {
+            unicorn.velocityY = -8;
+        });
+
+        gameLoop();
+    </script>
+</body>
+</html>
