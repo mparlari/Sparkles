@@ -8,7 +8,8 @@
         body {
             margin: 0;
             overflow: hidden;
-            background: skyblue;
+            background: url('/mnt/data/DALL·E 2025-01-29 15.11.06 - A digital painting of a dreamy sky filled with vibrant, multicolored rainbows and twinkling stars, reminiscent of a fantasy world. The sky is a gradie.webp') no-repeat center center fixed;
+            background-size: cover;
         }
         canvas {
             display: block;
@@ -20,15 +21,18 @@
     <script>
         const canvas = document.getElementById("gameCanvas");
         const ctx = canvas.getContext("2d");
-        
+
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
+
+        const unicornImage = new Image();
+        unicornImage.src = '/mnt/data/DALL·E 2025-01-29 15.34.18 - A pixel-art style game character of a small, adorable unicorn designed for a side-scrolling game, similar to Flappy Bird. The unicorn is facing to the.webp';
 
         let unicorn = {
             x: 50,
             y: canvas.height / 2,
-            width: 40,
-            height: 40,
+            width: 50,
+            height: 50,
             velocityY: 0,
             gravity: 0.5,
         };
@@ -36,10 +40,10 @@
         let obstacles = [];
         let frame = 0;
         let isGameOver = false;
+        let isGameStarted = false;
 
         function drawUnicorn() {
-            ctx.fillStyle = "pink";
-            ctx.fillRect(unicorn.x, unicorn.y, unicorn.width, unicorn.height);
+            ctx.drawImage(unicornImage, unicorn.x, unicorn.y, unicorn.width, unicorn.height);
         }
 
         function drawObstacles() {
@@ -85,6 +89,25 @@
             }
         }
 
+        function countdown(callback) {
+            let countdownNumber = 3;
+            const interval = setInterval(() => {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.fillStyle = "black";
+                ctx.font = "50px Arial";
+                if (countdownNumber > 0) {
+                    ctx.fillText(countdownNumber, canvas.width / 2 - 20, canvas.height / 2);
+                } else {
+                    ctx.fillText("GO!", canvas.width / 2 - 40, canvas.height / 2);
+                    clearInterval(interval);
+                    setTimeout(() => {
+                        callback();
+                    }, 1000);
+                }
+                countdownNumber--;
+            }, 1000);
+        }
+
         function gameLoop() {
             if (isGameOver) {
                 ctx.fillStyle = "black";
@@ -93,10 +116,10 @@
                 return;
             }
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            
+
             unicorn.velocityY += unicorn.gravity;
             unicorn.y += unicorn.velocityY;
-            
+
             drawUnicorn();
             updateObstacles();
             drawObstacles();
@@ -106,10 +129,19 @@
         }
 
         document.addEventListener("keydown", () => {
-            unicorn.velocityY = -8;
+            if (!isGameStarted) {
+                isGameStarted = true;
+                unicorn.velocityY = -8;
+            } else {
+                unicorn.velocityY = -8;
+            }
         });
 
-        gameLoop();
+        unicornImage.onload = () => {
+            countdown(() => {
+                gameLoop();
+            });
+        };
     </script>
 </body>
 </html>
