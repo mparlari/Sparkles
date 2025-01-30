@@ -38,6 +38,8 @@
             height: 50,
             velocityY: 0,
             gravity: 0.5,
+            jumpStrength: -8,
+            maxVelocityY: 10
         };
 
         let obstacles = [];
@@ -64,9 +66,9 @@
         }
 
         function updateObstacles() {
-            if (frame % 90 === 0) {
+            if (frame % 60 === 0) {
                 let height = Math.random() * (canvas.height / 2);
-                let gap = 200; // Adjusted gap size
+                let gap = 240;
                 obstacles.push({
                     x: canvas.width,
                     y: 0,
@@ -144,6 +146,9 @@
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
             unicorn.velocityY += unicorn.gravity;
+            if (unicorn.velocityY > unicorn.maxVelocityY) {
+                unicorn.velocityY = unicorn.maxVelocityY;
+            }
             unicorn.y += unicorn.velocityY;
 
             drawUnicorn();
@@ -158,12 +163,12 @@
         document.addEventListener("keydown", () => {
             if (!isGameStarted) {
                 isGameStarted = true;
-                unicorn.velocityY = -8;
+                unicorn.velocityY = unicorn.jumpStrength;
                 countdown(() => {
                     gameLoop();
                 });
             } else {
-                unicorn.velocityY = -8;
+                unicorn.velocityY = unicorn.jumpStrength;
             }
         });
 
