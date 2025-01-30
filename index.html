@@ -8,7 +8,7 @@
         body {
             margin: 0;
             overflow: hidden;
-            background: url('/mnt/data/DALL·E 2025-01-29 15.11.06 - A digital painting of a dreamy sky filled with vibrant, multicolored rainbows and twinkling stars, reminiscent of a fantasy world. The sky is a gradie.webp') no-repeat center center fixed;
+            background: url('./assets/background.webp') no-repeat center center fixed;
             background-size: cover;
         }
         canvas {
@@ -26,7 +26,10 @@
         canvas.height = window.innerHeight;
 
         const unicornImage = new Image();
-        unicornImage.src = '/mnt/data/DALL·E 2025-01-29 15.34.18 - A pixel-art style game character of a small, adorable unicorn designed for a side-scrolling game, similar to Flappy Bird. The unicorn is facing to the.webp';
+        unicornImage.src = './assets/unicorn.webp';
+        unicornImage.onerror = () => {
+            console.error("Failed to load unicorn image.");
+        };
 
         let unicorn = {
             x: 50,
@@ -43,7 +46,12 @@
         let isGameStarted = false;
 
         function drawUnicorn() {
-            ctx.drawImage(unicornImage, unicorn.x, unicorn.y, unicorn.width, unicorn.height);
+            if (unicornImage.complete && unicornImage.naturalWidth !== 0) {
+                ctx.drawImage(unicornImage, unicorn.x, unicorn.y, unicorn.width, unicorn.height);
+            } else {
+                ctx.fillStyle = "pink";
+                ctx.fillRect(unicorn.x, unicorn.y, unicorn.width, unicorn.height);
+            }
         }
 
         function drawObstacles() {
@@ -145,4 +153,3 @@
     </script>
 </body>
 </html>
-
