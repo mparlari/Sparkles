@@ -45,6 +45,7 @@
         let isGameOver = false;
         let isGameStarted = false;
         let startTime;
+        let elapsedTime = 0;
 
         function drawUnicorn() {
             if (unicornImage.complete && unicornImage.naturalWidth !== 0) {
@@ -65,7 +66,7 @@
         function updateObstacles() {
             if (frame % 90 === 0) {
                 let height = Math.random() * (canvas.height / 2);
-                let gap = 200; // Increased gap size for easier gameplay
+                let gap = 200; // Adjusted gap size
                 obstacles.push({
                     x: canvas.width,
                     y: 0,
@@ -99,6 +100,17 @@
             }
         }
 
+        function drawTimers() {
+            ctx.fillStyle = "gold";
+            ctx.font = "30px Georgia";
+            ctx.textAlign = "center";
+            
+            if (startTime) {
+                elapsedTime = Math.floor((Date.now() - startTime) / 1000);
+            }
+            ctx.fillText(`Time: ${elapsedTime}s`, canvas.width / 2, canvas.height - 50);
+        }
+
         function countdown(callback) {
             let countdownNumber = 3;
             const interval = setInterval(() => {
@@ -121,16 +133,6 @@
             }, 1000);
         }
 
-        function drawLevelTimer() {
-            if (startTime) {
-                let elapsedTime = Math.floor((Date.now() - startTime) / 1000);
-                ctx.fillStyle = "gold";
-                ctx.font = "30px Georgia";
-                ctx.textAlign = "center";
-                ctx.fillText(`Time: ${elapsedTime}s`, canvas.width / 2, canvas.height - 50);
-            }
-        }
-
         function gameLoop() {
             if (isGameOver) {
                 ctx.fillStyle = "black";
@@ -148,7 +150,7 @@
             updateObstacles();
             drawObstacles();
             checkCollision();
-            drawLevelTimer();
+            drawTimers();
             frame++;
             requestAnimationFrame(gameLoop);
         }
@@ -157,6 +159,9 @@
             if (!isGameStarted) {
                 isGameStarted = true;
                 unicorn.velocityY = -8;
+                countdown(() => {
+                    gameLoop();
+                });
             } else {
                 unicorn.velocityY = -8;
             }
