@@ -39,7 +39,7 @@
             velocityY: 0,
             gravity: 0.5,
             jumpStrength: -8,
-            maxVelocityY: 10
+            maxVelocityY: 5 
         };
 
         let obstacles = [];
@@ -68,7 +68,7 @@
         function updateObstacles() {
             if (frame % 60 === 0) {
                 let height = Math.random() * (canvas.height / 2);
-                let gap = 240;
+                let gap = 250;
                 obstacles.push({
                     x: canvas.width,
                     y: 0,
@@ -127,7 +127,7 @@
                     ctx.fillText("GO!", canvas.width / 2, 100);
                     clearInterval(interval);
                     setTimeout(() => {
-                        startTime = Date.now(); // Start level timer
+                        startTime = Date.now();
                         callback();
                     }, 1000);
                 }
