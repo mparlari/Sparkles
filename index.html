@@ -37,9 +37,9 @@
             width: 50,
             height: 50,
             velocityY: 0,
-            gravity: 0.5,
-            jumpStrength: -8,
-            maxVelocityY: 5 
+            gravity: 0.4, // Reduced gravity for smoother float
+            jumpStrength: -7, // Slightly reduced jump strength
+            maxVelocityY: 4 // Slower max fall speed for consistency
         };
 
         let obstacles = [];
@@ -66,9 +66,9 @@
         }
 
         function updateObstacles() {
-            if (frame % 60 === 0) {
+            if (frame % 50 === 0) { // Reduced initial spawn gap slightly
                 let height = Math.random() * (canvas.height / 2);
-                let gap = 250;
+                let gap = 270; // Increased gap size for easier movement
                 obstacles.push({
                     x: canvas.width,
                     y: 0,
@@ -111,28 +111,6 @@
                 elapsedTime = Math.floor((Date.now() - startTime) / 1000);
             }
             ctx.fillText(`Time: ${elapsedTime}s`, canvas.width / 2, canvas.height - 50);
-        }
-
-        function countdown(callback) {
-            let countdownNumber = 3;
-            const interval = setInterval(() => {
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                ctx.fillStyle = "gold";
-                ctx.font = "50px Georgia";
-                ctx.textAlign = "center";
-                
-                if (countdownNumber > 0) {
-                    ctx.fillText(countdownNumber, canvas.width / 2, 100);
-                } else {
-                    ctx.fillText("GO!", canvas.width / 2, 100);
-                    clearInterval(interval);
-                    setTimeout(() => {
-                        startTime = Date.now();
-                        callback();
-                    }, 1000);
-                }
-                countdownNumber--;
-            }, 1000);
         }
 
         function gameLoop() {
