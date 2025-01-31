@@ -37,9 +37,9 @@
             width: 50,
             height: 50,
             velocityY: 0,
-            gravity: 0.35, // Fine-tuned gravity for smooth float
-            jumpStrength: -6.5, // Slightly stronger jump
-            maxVelocityY: 3.5 // Further reducing max fall speed
+            gravity: 0.3, // Fine-tuned gravity for better consistency
+            jumpStrength: -6.5, // Adjusted jump strength for balance
+            maxVelocityY: 3.5 
         };
 
         let obstacles = [];
@@ -66,23 +66,24 @@
         }
 
         function updateObstacles() {
-            if (frame % 50 === 0) {
+            if (frame % 70 === 0) { // Increased spacing between obstacle pairs
                 let height = Math.random() * (canvas.height / 2);
-                let gap = 280; // Increased gap size slightly
+                let gap = 280;
+                let spacing = 250; // Increased horizontal spacing
                 obstacles.push({
-                    x: canvas.width,
+                    x: canvas.width + spacing,
                     y: 0,
                     width: 50,
                     height: height
                 });
                 obstacles.push({
-                    x: canvas.width,
+                    x: canvas.width + spacing,
                     y: height + gap,
                     width: 50,
                     height: canvas.height - height - gap
                 });
             }
-            obstacles.forEach(obstacle => obstacle.x -= 2.5); // Slower obstacle movement
+            obstacles.forEach(obstacle => obstacle.x -= 2); // Slower obstacle movement for consistency
             obstacles = obstacles.filter(obstacle => obstacle.x + obstacle.width > 0);
         }
 
