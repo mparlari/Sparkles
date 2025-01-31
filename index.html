@@ -113,6 +113,28 @@
             ctx.fillText(`Time: ${elapsedTime}s`, canvas.width / 2, canvas.height - 50);
         }
 
+        function countdown(callback) {
+            let countdownNumber = 3;
+            const interval = setInterval(() => {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.fillStyle = "gold";
+                ctx.font = "50px Georgia";
+                ctx.textAlign = "center";
+                
+                if (countdownNumber > 0) {
+                    ctx.fillText(countdownNumber, canvas.width / 2, 100);
+                } else {
+                    ctx.fillText("GO!", canvas.width / 2, 100);
+                    clearInterval(interval);
+                    setTimeout(() => {
+                        startTime = Date.now();
+                        callback();
+                    }, 1000);
+                }
+                countdownNumber--;
+            }, 1000);
+        }
+
         function gameLoop() {
             if (isGameOver) {
                 ctx.fillStyle = "black";
